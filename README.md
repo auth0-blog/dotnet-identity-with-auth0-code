@@ -1,0 +1,1 @@
+This repository contains the .NET projects described in the ebook **.NET Identity with Auth0** by Andrea Chiarelli.
