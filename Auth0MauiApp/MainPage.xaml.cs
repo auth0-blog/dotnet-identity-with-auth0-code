@@ -1,4 +1,4 @@
-﻿using Auth0MauiApp.Auth0;
+﻿using Auth0.OidcClient;
 using System.Net.Http.Headers;
 
 namespace Auth0MauiApp;
@@ -6,18 +6,14 @@ namespace Auth0MauiApp;
 public partial class MainPage : ContentPage
 {
 	int count = 0;
-  private readonly Auth0Client auth0Client;
-  private HttpClient _httpClient;
+    private readonly Auth0Client auth0Client;
+	private HttpClient _httpClient;
 
 	public MainPage(Auth0Client client, HttpClient httpClient)
 	{
 		InitializeComponent();
 		auth0Client = client;
-    _httpClient = httpClient;
-
-    #if WINDOWS
-    auth0Client.Browser = new WebViewBrowserAuthenticator(WebViewInstance);
-    #endif
+		_httpClient = httpClient;
 	}
 
 	private void OnCounterClicked(object sender, EventArgs e)
@@ -34,18 +30,18 @@ public partial class MainPage : ContentPage
 
   private async void OnLoginClicked(object sender, EventArgs e)
   {
-    var loginResult = await auth0Client.LoginAsync();
+    var loginResult = await auth0Client.LoginAsync(new { audience = "<YOUR_API_IDENTIFIER>"});
 
     if (!loginResult.IsError)
     {
       UsernameLbl.Text = loginResult.User.Identity.Name;
       UserPictureImg.Source = loginResult.User
         .Claims.FirstOrDefault(c => c.Type == "picture")?.Value;
-				
+
       LoginView.IsVisible = false;
       HomeView.IsVisible = true;
 
-      TokenHolder.AccessToken = loginResult.AccessToken;
+	  TokenHolder.AccessToken = loginResult.AccessToken;
     }
     else
     {
@@ -57,12 +53,8 @@ public partial class MainPage : ContentPage
   {
     var logoutResult = await auth0Client.LogoutAsync();
 
-    if (!logoutResult.IsError) {
-        HomeView.IsVisible = false;
-        LoginView.IsVisible = true;
-    } else {
-        await DisplayAlert("Error", logoutResult.ErrorDescription, "OK");
-    }
+      HomeView.IsVisible = false;
+      LoginView.IsVisible = true;
   }
 
   private async void OnApiCallClicked(object sender, EventArgs e)

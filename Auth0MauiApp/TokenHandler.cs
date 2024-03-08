@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
 
-namespace Auth0MauiApp.Auth0;
+namespace Auth0MauiApp;
 
 public class TokenHandler : DelegatingHandler
 {

@@ -1,4 +1,4 @@
-namespace Auth0MauiApp.Auth0;
+namespace Auth0MauiApp;
 
 public static class TokenHolder
 {
